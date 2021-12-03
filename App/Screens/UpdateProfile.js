@@ -6,53 +6,95 @@ import { Formik } from 'formik';
 import * as permission from 'expo-permissions';
 import * as imagePicker from 'expo-image-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { useNavigation } from '@react-navigation/native';
 
 import AppButton from '../Components/AppButton';
 import AppTextInput from '../Components/AppTextInput';
 import Screen from '../Components/Screen';
 import AppText from '../Components/AppText.android';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import API from "../config/api";
+import {MsgBox,Colors} from './../Components/styles';
 import dstyles from '../config/styles';
-import {registration} from '../config/api';
 
 
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),
-    firstName: Yup.string().required().label("FirstName"),
-    lastName: Yup.string().required().label("LastName"),
-    companyName: Yup.string().required().label("CompanyName"),
-    phone: Yup.string().label("Phone"),
-    password: Yup.string().required().min(6).label("Password"),
-    passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
-
+    name: Yup.string().required().label("Name"),
 });
 
-function UpdateProfile(props) {
-    const navigation = useNavigation()
+function UpdateProfile({route,navigation}) {
     const [pickImg,setPickImg] = useState(require("../../assets/noProfile.png"));
     const [access,setaccess] = useState(false);
+    const [User, setUser] = useState();
+    const [pname, setname] = useState("");
+    const [pemail, setemail] = useState("");
+    const [message, setmessage] = useState();
 
+    useEffect(()=>{
+        async function checkUser() {
+        try {
+            var value = await AsyncStorage.getItem('Credentials')
+            value = JSON.parse(value)
+            if(value != null)
+            {
+                setUser(value)
+                setname(value.data.user.name)
+                setemail(value.data.user.email)
+            }
+        } catch(e) {
+            console.log(e)
+        }
+        }
+        checkUser();
+    }
+    ,[])
     
       const handleButton = (values, {setSubmitting, setErrors, setStatus, resetForm}) => {
-        
-          registration(
-            values.firstName,
-            values.lastName,
-            values.email,
-            values.companyName,
-            values.phone,
-            values.password,
-            resetForm
-          )
+        const {name,email}  = values;
+        axios
+      .patch(`${API}/users/updateMe`,
+      {name, email}, {
+        headers: {
+        'Authorization': 'Bearer ' + User.token
+        }
+     })
+      .then(async (response) => {
+        const result = response.data;
+        var { status, data } = result;
+        if(status != 'success'){
+          setmessage("Error occured");
+        }else{
+            await AsyncStorage.getItem( 'Credentials' )
+            .then( data => {
+            data = JSON.parse( data );
+            // Decrement
+            data.data.user.email=email;
+            data.data.user.name=name;
+            //save the value to AsyncStorage again
+            AsyncStorage.setItem( 'Credentials', JSON.stringify( data ) );
+            }).done();
+          navigation.goBack();
+        }
+        })
+        .catch((error) => {
+          if(error.status == 403){
+            setmessage("Access denied, Login Again")
+          }
+          else{
+              setmessage("An error occurred. Check your network and try again")
+            }
+            console.log(error);
+            console.log("error");
+        });
+
+        resetForm
         console.log(values)
           
         }
      
 
-    useEffect(() => {
-        
-    }, [])
 
     async function imageSelector(){
         const {granted} =await permission.askAsync(permission.CAMERA)
@@ -81,94 +123,43 @@ function UpdateProfile(props) {
                     <View style={styles.imagePickStyle}>
                     <MaterialCommunityIcons style={styles.icon} name="camera-enhance" onPress={imageSelector}  size={40} color={dstyles.colors.medium} />
                     </View>
-                
-
                 </ImageBackground>
                 </View>
 
             <Formik
-                initialValues={{firstName: '',lastName:'',email:'',companyName:'',phone:'', password:'',passwordConfirmation:''}}
+                initialValues={{name: pname,email:pemail}}
                 onSubmit={handleButton}
+                enableReinitialize={true}
                 validationSchema={validationSchema}
             >
             {({handleChange,handleSubmit, errors , setFieldTouched,touched}) =>(
                 <>
                 
 
-                <AppTextInput placeholder={"First Name"}
+                <AppTextInput placeholder={"Name"}
                 name="account"
                 autoCapitalize="none"
                 autoCorrect={false}
-                onChangeText={handleChange("firstName")}
-                onBlue={() => setFieldTouched("firstName")}
+                defaultValue={pname}
+                onChangeText={handleChange("name")}
+                onBlue={() => setFieldTouched("name")}
                 />
-            {touched.firstName && <AppText style={{color: 'red'}}>{errors.firstName}</AppText>}
+            {touched.Name && <AppText style={{color: 'red'}}>{errors.Name}</AppText>}
 
-                <AppTextInput placeholder={"Last Name"}
-                    name="account"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onChangeText={handleChange("lastName")}
-                    onBlue={() => setFieldTouched("lastName")}
-                />
-            {touched.lastName && <AppText style={{color: 'red'}}>{errors.lastName}</AppText>}
-
+                
                 <AppTextInput placeholder={"Email"}
                 name="email"
                 autoCapitalize="none"
                 autoCorrect={false}
+                // defaultValue={"User.email"}
+                defaultValue={pemail}
                 onChangeText={handleChange("email")}
                 onBlue={() => setFieldTouched("email")}
                 testContentType="emailAddress"
             />
             {touched.email && <AppText style={{color: 'red'}}>{errors.email}</AppText>}
                 
-            <AppTextInput placeholder={"Company Name"}
-                    name="office-building"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onChangeText={handleChange("companyName")}
-                    onBlue={() => setFieldTouched("companyName")}
-                />
-            {touched.companyName && <AppText style={{color: 'red'}}>{errors.companyName}</AppText>}
             
-            <AppTextInput placeholder={"Phone (optional)"}
-                    name="phone"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    keyboardType="numeric"
-                    onChangeText={handleChange("phone")}
-                    onBlue={() => setFieldTouched("phone")}
-                />
-            {touched.phone && <AppText style={{color: 'red'}}>{errors.phone}</AppText>}
-           
-            <AppTextInput placeholder={"Password"}
-                name="lock"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry
-                onChangeText={handleChange("password")}
-                onBlue={() => setFieldTouched("password")}
-                textContentType="password"
-             />
-             <View>
-            {touched.password && <AppText style={{color: 'red'}}>{errors.password}</AppText>}
-             </View>
-
-             <AppTextInput placeholder={"Confirm Password"}
-                name="lock"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry
-                onChangeText={handleChange("passwordConfirmation")}
-                onBlue={() => setFieldTouched("passwordConfirmation")}
-                textContentType="password"
-             />
-             <View>
-            {touched.passwordConfirmation && <AppText style={{color: 'red'}}>{errors.passwordConfirmation}</AppText>}
-             </View>
-
-             
 
              
             <View style={{margin:20}}>  
@@ -177,7 +168,7 @@ function UpdateProfile(props) {
                 </>
             )}
             </Formik>
-            
+            <MsgBox type="error">{message}</MsgBox> 
             </Screen>
             </ScrollView>  
     );

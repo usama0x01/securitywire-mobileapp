@@ -25,6 +25,18 @@ function ListItem(props) {
                 {props.subtitle && <AppText style={[style.subtitle]}>
                     {props.subtitle}
                 </AppText>}
+                {props.status && <View style={[style.status]}>
+                    {props.status}
+                </View>}
+            </View>
+            <View style={style.container1}>
+                {props.date && <AppText style={[style.date]}>
+                    {props.date}
+                </AppText>}
+                {props.time && <AppText style={[style.date]}>
+                    {props.time}
+                </AppText>}
+                
             </View>
         </View>
         </TouchableHighlight>
@@ -37,6 +49,9 @@ const style = StyleSheet.create({
         flexDirection: "row",
         padding:15,
         backgroundColor: colors.white
+    },status:{
+       top:5,
+       width:125
     },
     container1:{
         marginLeft: 10,
@@ -53,6 +68,12 @@ const style = StyleSheet.create({
         fontSize: 15,
         fontWeight: '200',
         color: colors.medium
+    },
+    date:{
+        top:20,
+        fontSize: 15,
+        fontWeight: '200',
+        textAlign: "right"
     }
 })
 

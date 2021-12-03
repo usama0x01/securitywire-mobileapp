@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import API from "../config/api";
 import AppNavigator from '../Navigator/AppNavigator';
 
+
 const { darkLight, brand, primary } = Colors;
 
 const validationSchema = Yup.object().shape({
@@ -34,6 +35,7 @@ function LoginScreen(props) {
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+    
     // credentials context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   

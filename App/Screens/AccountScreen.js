@@ -6,9 +6,10 @@ import Icon from '../Components/Icon';
 import ListItem from '../Components/ListItem';
 import Screen from '../Components/Screen';
 import colors from '../config/colors';
-import {loggingOut} from '../config/api';
 import {useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Restart} from 'fiction-expo-restart';
+
 
 const DATA = [
     {
@@ -30,9 +31,21 @@ const DATA = [
 
 
 
+
 function AccountScreen({route,navigation}) {
     const [AccName, setAccName] = useState("Demo User");
     const [Email, setEmail] = useState("demo@demo.com");
+    const [User, setUser] = useState();
+
+    const loggingOut =async () =>{
+        try {
+            await AsyncStorage.removeItem("Credentials");
+            Restart()
+        }
+        catch(exception) {
+            console.log(exception)
+        }
+}
 
     useEffect(()=>{
         async function checkUser() {
@@ -43,6 +56,7 @@ function AccountScreen({route,navigation}) {
             {
                 setAccName(value.data.user.name)
                 setEmail(value.data.user.email)
+                setUser(value.data.user)
             }
         } catch(e) {
             console.log(e)
@@ -50,7 +64,7 @@ function AccountScreen({route,navigation}) {
         }
         checkUser();
     }
-    ,[])
+    )
     
     
     return (

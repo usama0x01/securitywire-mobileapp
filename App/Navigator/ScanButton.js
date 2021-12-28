@@ -5,12 +5,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { color } from 'react-native-reanimated';
 const ScanButton = ({onPress}) => {
     return (
-        <TouchableOpacity onPress={onPress}>
-        <View style={styles.container} >
-            <MaterialCommunityIcons name="search-web" size={30} color={colors.white} />
-        </View>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.container}  onPress={onPress}>
         
+            <MaterialCommunityIcons name="search-web" size={30} color={colors.white} />
+       
+        </TouchableOpacity>   
     )
 }
 

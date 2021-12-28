@@ -12,6 +12,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import PDFReader from 'rn-pdf-reader-js'
 
 import API from "../config/api";
 import RNSpeedometer from 'react-native-speedometer'
@@ -19,7 +20,7 @@ import colors from '../config/colors';
 import AppText from '../Components/AppText';
 import { TouchableOpacity } from 'react-native';
 import AppButton from '../Components/AppButton';
-import {MsgBox,Colors} from './../Components/styles';
+import {MsgBox,Colors} from '../Components/styles';
 import Html from '../Components/Html.js'
 
 
@@ -40,21 +41,7 @@ const labels= [
       activeBarColor: '#eb4444',
     }]
 
-    const createAndSavePDF = async (html) => {
-        try {
-          const { uri } = await Print.printToFileAsync({ html });
-          if (Platform.OS === "ios") {
-            await Sharing.shareAsync(uri);
-          } else {
-            const permission = await MediaLibrary.requestPermissionsAsync();
-            if (permission.granted) {
-              await MediaLibrary.createAssetAsync(uri);
-            }
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
+    
       
 
 export default ReportScreen = ({ route, navigation }) =>{
@@ -65,7 +52,7 @@ export default ReportScreen = ({ route, navigation }) =>{
   const { item } = route.params;
   var data = JSON.parse(item.data)
  
-  
+
 const loadData = async () => {
     try {
         var value = await AsyncStorage.getItem('Credentials')
@@ -150,7 +137,7 @@ const loadData = async () => {
 
           <View style={styles.button}>  
           <View style={styles.actions}>
-           <AppButton title="Download Report"  onPress={() => {createAndSavePDF(Html)}} color="secondary"/>
+           <AppButton title="View Report"  onPress={() => {navigation.navigate("DetailScreen",{pdata:data})}} color="secondary"/>
           </View>
           <View style={styles.actions}>
            <AppButton title="Delete Report"  onPress={() => {handleDelete(item._id)}} color="danger"/>

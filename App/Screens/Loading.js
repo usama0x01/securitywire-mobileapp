@@ -1,8 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import { ActivityIndicator,StyleSheet, Text, View } from 'react-native';
 import AuthNavigator from '../Navigator/AuthNavigator';
-import NavTheme from '../Navigator/navigationTheme';
-import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from '../Navigator/AppNavigator';
 
 // Async storage

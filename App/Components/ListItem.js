@@ -29,7 +29,7 @@ function ListItem(props) {
                     {props.status}
                 </View>}
             </View>
-            <View style={style.container1}>
+            <View style={style.container2}>
                 {props.date && <AppText style={[style.date]}>
                     {props.date}
                 </AppText>}
@@ -55,8 +55,11 @@ const style = StyleSheet.create({
     },
     container1:{
         marginLeft: 10,
-        justifyContent: "center",
-
+        alignItems:'stretch'
+    },container2:{
+        marginLeft: 10,
+        alignItems:'stretch',
+        right: 30
     },
     title:{
         color: "black",
@@ -70,10 +73,9 @@ const style = StyleSheet.create({
         color: colors.medium
     },
     date:{
-        top:20,
+        top:40,
         fontSize: 15,
-        fontWeight: '200',
-        textAlign: "right"
+        fontWeight: 'bold'
     }
 })
 

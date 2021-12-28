@@ -7,12 +7,12 @@ import { Formik } from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // credentials context
-import { CredentialsContext } from './../Components/CredentialsContext';
+import { CredentialsContext } from '../Components/CredentialsContext';
 
 // api client
 import axios from 'axios';
 
-import {MsgBox,Colors} from './../Components/styles';
+import {MsgBox,Colors} from '../Components/styles';
 import AppButton from '../Components/AppButton';
 import AppTextInput from '../Components/AppTextInput';
 import Screen from '../Components/Screen';

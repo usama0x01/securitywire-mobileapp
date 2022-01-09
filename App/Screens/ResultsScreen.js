@@ -62,7 +62,7 @@ function ResultsScreen({route,navigation}) {
           }
           else{
             setisLoading(false)
-            data = data.filter((val)=> JSON.parse(val.data).url != 'undefined')
+            data = data.filter((val)=> val.url != 'error')
             setResults(data)
             setinMemoryResults(data)
           }
@@ -127,8 +127,9 @@ function ResultsScreen({route,navigation}) {
             renderItem={({item}) =>
             <View style={{marginVertical:5}}>
             <ListItem
-            img={`https://s2.googleusercontent.com/s2/favicons?domain_url=${JSON.parse(item.data).url}`}
-            title={JSON.parse(item.data).url}
+            img={`https://s2.googleusercontent.com/s2/favicons?domain_url=${item.url}`}
+            title={item.url}
+            click={item.status == 'active' ? true : false}
             status={
               item.status == 'completed' ? (<View style={styles.statecom}>
                 <Text style={styles.t} >{item.status} </Text>

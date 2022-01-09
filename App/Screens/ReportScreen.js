@@ -49,8 +49,8 @@ export default ReportScreen = ({ route, navigation }) =>{
   const [User, setUser] = useState([])
   const [message, setmessage] = useState("")
   const [config, setconfig] = useState()
+  const [data, setdata] = useState({})
   const { item } = route.params;
-  var data = JSON.parse(item.data)
  
 
 const loadData = async () => {
@@ -110,20 +110,50 @@ const loadData = async () => {
     }
 
     useEffect(()=>{
-      loadData()
-      severity()
+      if(item.status != 'error'){
+        setdata(JSON.parse(item.data))
+        loadData()
+        severity()
+      }
       }
       ,[])
 
 
      return (
          <>
+        {item.status == 'error' ? <>
+        <Screen style={styles.container}>
+            
+            <View style={styles.info}>
+            <MsgBox type="error">{message}</MsgBox> 
+            <AppText style={styles.host}>
+                Target: {item.url}
+            </AppText>
+            </View>
+          {/* <TextInput placeholder="Speedometer Value" style={styles.textInput} onChangeText={change} /> */}
+        
+          
+          <RNSpeedometer labelStyle={{opacity:0}}labelNoteStyle={styles.test} labelWrapperStyle={styles.test2} value={0} size={300} labels={labels} />
+          
+            
+           
+        </Screen>
+
+          <View style={styles.button}>  
+          <View style={styles.actions}>
+           <AppButton title="View Report"  disabled={true} color="secondary"/>
+          </View>
+          <View style={styles.actions}>
+           <AppButton title="Delete Report"  onPress={() => {handleDelete(item._id)}} color="danger"/>
+          </View>
+          </View>
+        </> : <>
             <Screen style={styles.container}>
             
             <View style={styles.info}>
             <MsgBox type="error">{message}</MsgBox> 
             <AppText style={styles.host}>
-                Target: {data.url}
+                Target: {item.url}
             </AppText>
             </View>
           {/* <TextInput placeholder="Speedometer Value" style={styles.textInput} onChangeText={change} /> */}
@@ -143,7 +173,7 @@ const loadData = async () => {
            <AppButton title="Delete Report"  onPress={() => {handleDelete(item._id)}} color="danger"/>
           </View>
           </View>
-            
+            </>}
          </>
         
       );

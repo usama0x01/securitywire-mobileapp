@@ -62,13 +62,11 @@ export default DetailScreen = ({ route, navigation }) =>{
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
       paddingTop: StatusBar.currentHeight,
       marginHorizontal: 16,
       backgroundColor: colors.light,
     },
     item: {
-        flex: 1,
       backgroundColor: '#f9c2ff',
       padding: 2,
       marginVertical: 2,

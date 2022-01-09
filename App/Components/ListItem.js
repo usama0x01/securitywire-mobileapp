@@ -9,6 +9,7 @@ function ListItem(props) {
     return (
         <Swipeable renderRightActions={props.renderRightActions}>
         <TouchableHighlight
+        disabled={props.click}
          underlayColor={colors.light}
          onPress={props.onPress}>
         <View style={style.maincontainer}>

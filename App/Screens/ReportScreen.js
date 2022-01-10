@@ -49,11 +49,11 @@ export default ReportScreen = ({ route, navigation }) =>{
   const [User, setUser] = useState([])
   const [message, setmessage] = useState("")
   const [config, setconfig] = useState()
-  const [data, setdata] = useState({})
+  const [ddata, setddata] = useState({"url":"","sqli":[],"xss":[],"port":[],"exif":null})
   const { item } = route.params;
  
 
-const loadData = async () => {
+const loadddata = async () => {
     try {
         var value = await AsyncStorage.getItem('Credentials')
         if(value !== null) {
@@ -98,25 +98,28 @@ const loadData = async () => {
   
 
     const severity = () => {
-        let score = 0;
-        if(data.sqli.length != 0){
+      let score = 0;
+        setddata(JSON.parse(item.data))
+        console.log(ddata)
+        console.log("aaaaaaaaaaaaaaaaaaa")
+        if(Object.keys(ddata.sqli).length != 0){
           score=score+90;
-        }else if(data.xss.length != 0){
+        }else if(Object.keys(ddata.xss).length != 0){
           score=score+50;
-        }else if(data.exif !== null){
+        }else if(ddata.exif !== null){
           score=score+10;
         }
+        console.log(score);
         setvalue(score);
     }
 
     useEffect(()=>{
+      console.log("bbbbbbbbbbbbbbbbbb")
       if(item.status != 'error'){
-        setdata(JSON.parse(item.data))
-        loadData()
+        loadddata()
         severity()
       }
-      }
-      ,[])
+      },[])
 
 
      return (
@@ -167,7 +170,7 @@ const loadData = async () => {
 
           <View style={styles.button}>  
           <View style={styles.actions}>
-           <AppButton title="View Report"  onPress={() => {navigation.navigate("DetailScreen",{pdata:data})}} color="secondary"/>
+           <AppButton title="View Report"  onPress={() => {navigation.navigate("DetailScreen",{pddata:ddata})}} color="secondary"/>
           </View>
           <View style={styles.actions}>
            <AppButton title="Delete Report"  onPress={() => {handleDelete(item._id)}} color="danger"/>

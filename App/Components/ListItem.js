@@ -18,7 +18,7 @@ function ListItem(props) {
               height: 70,
               width: 70,
               uri: props.img
-            }} />
+            }}  />
             <View style={style.container1}>
                 <AppText style={style.title}>
                    {props.title}
@@ -59,8 +59,8 @@ const style = StyleSheet.create({
         alignItems:'stretch'
     },container2:{
         marginLeft: 10,
-        alignItems:'stretch',
-        right: 30
+        position: 'absolute',
+        right: 10
     },
     title:{
         color: "black",

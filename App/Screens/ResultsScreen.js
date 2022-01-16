@@ -15,7 +15,9 @@ import {
 import { SearchBar,Card } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import socketIOClient from "socket.io-client";
 import API from "../config/api";
+import apisocket from "../config/apisocket";
 import Screen from '../Components/Screen'
 import colors from '../config/colors';
 import ListItem from '../Components/ListItem';
@@ -81,16 +83,22 @@ function ResultsScreen({route,navigation}) {
   };
 
   useEffect(()=>{
-        setisLoading(true)
-        loadResults();
-  },[])
+    setisLoading(true)
+    loadResults();
+    const socket = socketIOClient(apisocket);
+    socket.on("FromAPI", data => {
+      console.log("------===+===---------");
+      setisLoading(true)
+      loadResults();
+    
+    });
+},[])
 
 
   const searchResults = value => {
     if(value!=""){
       const filteredResults = Results.filter(Result => {
-        var xam = JSON.parse(Result.data)
-        return xam.url.toLowerCase().includes(value.toLowerCase());
+        return Result.url.toLowerCase().includes(value.toLowerCase());
       });
       setsearchfield(value)
       setinMemoryResults(filteredResults)

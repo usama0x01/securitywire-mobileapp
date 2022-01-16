@@ -57,7 +57,7 @@ function SignupScreen(props) {
             handleMessage("Please fill required field", status);
           } else {
             persistLogin(result);
-            navigation.navigate('Loading')
+            navigation.navigate('AppNavigator')
           }
           setSubmitting(false);
         })
@@ -124,14 +124,14 @@ function SignupScreen(props) {
             <Screen>
                 <View  style={styles.imgcon} >
 
-                <ImageBackground  style={styles.img} source={pickImg}>
+                {/* <ImageBackground  style={styles.img} source={pickImg}>
 
                     <View style={styles.imagePickStyle}>
                     <MaterialCommunityIcons style={styles.icon} name="camera-enhance" onPress={imageSelector}  size={40} color={dstyles.colors.medium} />
                     </View>
                 
 
-                </ImageBackground>
+                </ImageBackground> */}
                 </View>
 
                 <Formik

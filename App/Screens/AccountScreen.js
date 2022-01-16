@@ -72,7 +72,7 @@ function AccountScreen({route,navigation}) {
         <Screen>
             <View style={{marginBottom: 20}}>
 
-            <ListItem img="https://specials-images.forbesimg.com/imageserve/5fff7511054c5ffa3d55729a/960x0.jpg"
+            <ListItem img='https://i.ibb.co/6y1dKSV/logo.png'
             subtitle={Email} title={AccName} />
             </View>
             <View style={{marginVertical: 20}}>

@@ -14,6 +14,7 @@ import Screen from '../Components/Screen';
 import AppText from '../Components/AppText.android';
 import dstyles from '../config/styles';
 import axios from 'axios';
+import {Restart} from 'fiction-expo-restart';
 
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -58,7 +59,15 @@ function ChangePassowrd(props) {
     ,[])
 
     
-    
+    const loggingOut =async () =>{
+      try {
+          await AsyncStorage.removeItem("Credentials");
+          Restart()
+      }
+      catch(exception) {
+          console.log(exception)
+      }
+    }
     // credentials context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   
@@ -78,14 +87,14 @@ function ChangePassowrd(props) {
           if (status != 'success') {
             handleMessage("incorrect old password.", status);
           } else {
-            navigation.goBack();
+            loggingOut()
           }
           setSubmitting(false);
         })
         .catch((error) => {
           setSubmitting(false);
           if(error.toJSON().status == 401){
-            handleMessage('Some Error occurred');
+            handleMessage('Old password is incorrect.');
           }
           else{
             handleMessage('An error occurred. Check your network and try again');

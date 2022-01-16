@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppButton from '../Components/AppButton';
 import AppTextInput from '../Components/AppTextInput';
 import { NavigationContainer } from '@react-navigation/native';
+import urlExist from "url-exist"
 
 import Screen from '../Components/Screen'
 import API from "../config/api";
@@ -24,7 +25,7 @@ export default  ScanScreen = () => {
     const [messageType, setMessageType] = useState();
     const [User, setUser] = useState();
     
-    function validURL(str) {
+    async function validURL(str) {
       var pattern = new RegExp('((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
         '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
         '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
@@ -32,6 +33,8 @@ export default  ScanScreen = () => {
         '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
       return !!pattern.test(str);
     }
+
+    
     useEffect(()=>{
       async function checkUser() {
       try {
@@ -56,9 +59,10 @@ export default  ScanScreen = () => {
   };
   
 
-  const sendValues = () => {
+  const sendValues =async () => {
     setMessage(null)
-    if(validURL(url)){
+    const isLive = await urlExist(`https://${url}`)
+    if(validURL(url) && isLive ){
       axios
     .get(`${API}/Scanner/status`, {
       headers: {
@@ -70,11 +74,15 @@ export default  ScanScreen = () => {
       if(data.status != false){
         setMessage("Wait for Previous Scan to complete.");
       }else{
-        axios
-        .post(`${API}/Scanner/create`, {url },{
+        seturl(null)
+        fetch(`${API}/Scanner/create`, {
+          method: 'POST',
           headers: {
-          'Authorization': 'Bearer ' + User.token
-          }
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + User.token
+          },
+          body: JSON.stringify({url:url })
         })
         .catch((error) => {
           if(error.status == 403){

@@ -96,26 +96,25 @@ const loadddata = async () => {
         });
   };
   
+  
+  const severity = () => {
+    let score = 0;
+      if(Object.keys(JSON.parse(item.data).sqli).length != 0){
+        score=score+90;
+      }else if(Object.keys(JSON.parse(item.data).xss).length != 0){
+        score=score+50;
+      }else if(JSON.parse(item.data).exif !== null || JSON.parse(item.data).exif !== "null"){
+        score=score+10;
+      }
+      console.log(score);
+      setvalue(score);
+  }
+  
 
-    const severity = () => {
-      let score = 0;
-        setddata(JSON.parse(item.data))
-        console.log(ddata)
-        console.log("aaaaaaaaaaaaaaaaaaa")
-        if(Object.keys(ddata.sqli).length != 0){
-          score=score+90;
-        }else if(Object.keys(ddata.xss).length != 0){
-          score=score+50;
-        }else if(ddata.exif !== null){
-          score=score+10;
-        }
-        console.log(score);
-        setvalue(score);
-    }
 
     useEffect(()=>{
-      console.log("bbbbbbbbbbbbbbbbbb")
       if(item.status != 'error'){
+        setddata(JSON.parse(item.data))
         loadddata()
         severity()
       }
@@ -133,13 +132,9 @@ const loadddata = async () => {
                 Target: {item.url}
             </AppText>
             </View>
-          {/* <TextInput placeholder="Speedometer Value" style={styles.textInput} onChangeText={change} /> */}
-        
           
           <RNSpeedometer labelStyle={{opacity:0}}labelNoteStyle={styles.test} labelWrapperStyle={styles.test2} value={0} size={300} labels={labels} />
-          
-            
-           
+
         </Screen>
 
           <View style={styles.button}>  
@@ -170,7 +165,7 @@ const loadddata = async () => {
 
           <View style={styles.button}>  
           <View style={styles.actions}>
-           <AppButton title="View Report"  onPress={() => {navigation.navigate("DetailScreen",{pddata:ddata})}} color="secondary"/>
+           <AppButton title="View Report"  onPress={() => {navigation.navigate("DetailScreen",{pdata:ddata})}} color="secondary"/>
           </View>
           <View style={styles.actions}>
            <AppButton title="Delete Report"  onPress={() => {handleDelete(item._id)}} color="danger"/>

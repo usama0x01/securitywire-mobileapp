@@ -19,7 +19,6 @@ import Screen from '../Components/Screen';
 import AppText from '../Components/AppText.android';
 import { useNavigation } from '@react-navigation/native';
 import API from "../config/api";
-import AppNavigator from '../Navigator/AppNavigator';
 
 
 const { darkLight, brand, primary } = Colors;
@@ -51,7 +50,7 @@ function LoginScreen(props) {
             handleMessage("Wrong Email or Password.", status);
           } else {
             persistLogin(result);
-            navigation.navigate('Loading')
+            navigation.navigate('AppNavigator')
           }
           setSubmitting(false);
         })

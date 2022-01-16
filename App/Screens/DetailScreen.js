@@ -12,7 +12,7 @@ export default DetailScreen = ({ route, navigation }) =>{
     if(pdata.xss.length==0){
         pdata.xss = ["No Xss Injection Found"]
     }
-    if(pdata.exif == null){
+    if(pdata.exif == null || pdata.exif == "null"){
         pdata.exif = ["No Exif Data Found"]
     }
     if(pdata.port.length==0){
@@ -46,7 +46,8 @@ export default DetailScreen = ({ route, navigation }) =>{
       
 
         return (
-            <ImageBackground style={{height: 150,width: 150}} source={require('../../assets/logo.png')}>
+          <ImageBackground style={{flex: 1}} resizeMode='contain' imageStyle={{opacity:0.1}} source={require('../../assets/logo.png')}>
+          
             <Screen style={styles.container}>
             <SectionList
               sections={DATA}
@@ -55,18 +56,20 @@ export default DetailScreen = ({ route, navigation }) =>{
               renderSectionHeader={({ section: { title } }) => <Text style={styles.header}>{title}</Text>}
               />
              </Screen>
-              </ImageBackground>
+             </ImageBackground>
         )
 }
 
 
 const styles = StyleSheet.create({
     container: {
+      flex: 1,
       paddingTop: StatusBar.currentHeight,
       marginHorizontal: 16,
       backgroundColor: colors.light,
     },
     item: {
+      flex: 1,
       backgroundColor: '#f9c2ff',
       padding: 2,
       marginVertical: 2,
